@@ -476,7 +476,7 @@ static void SimpleBLEBroadcaster_init(void)
   // Create an RTOS queue for message from profile to be sent to app.
   appMsgQueue = Util_constructQueue(&appMsg);
 
-  Board_initKeys(SimpleBLEBroadcaster_keyChangeHandler);
+//  Board_initKeys(SimpleBLEBroadcaster_keyChangeHandler);
   
   // Create one-shot clocks for internal periodic events.
 //  Util_constructClock(&oneshotClock, SimpleBLEBroadcaster_clockHandler,
@@ -533,7 +533,7 @@ static void SimpleBLEBroadcaster_init(void)
   Display_print0(dispHandle, 0, 0, "BLE Broadcaster");
   
   HwGPIOInit();
-  HwGPIOSet(Board_RLED,1);
+//  HwGPIOSet(Board_RLED,1);
 
 //  HwUARTInit();
 //  HwUARTWrite("observer init\r\n",13);
