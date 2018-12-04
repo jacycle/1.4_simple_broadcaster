@@ -17,6 +17,10 @@ const PIN_Config GPIOTable[] =
   IOID_2 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MIN,
   IOID_3 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MIN,
   IOID_4 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MIN,
+  
+  IOID_5 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MIN,
+  IOID_6 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MIN,
+  
   IOID_7 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MIN,
   IOID_8 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MIN,
   IOID_9 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MIN,
@@ -63,9 +67,9 @@ void HwGPIOSet(uint32_t pin, uint8_t flag)
 {
   switch (pin)
   {
-  case Board_LED0:
-    ledBlinkFlag[0] = flag;
-    break;
+//  case Board_LED0:
+//    ledBlinkFlag[0] = flag;
+//    break;
 //  case Board_LED1:
 //    ledBlinkFlag[1] = flag;
 //    break;
@@ -92,10 +96,10 @@ void HwGPIOToggle(uint32_t pin)
   
   switch (pin)
   {
-  case Board_LED0:
-    ledBlinkFlag[0] = !ledBlinkFlag[0];
-    flag = ledBlinkFlag[0];
-    break;
+//  case Board_LED0:
+//    ledBlinkFlag[0] = !ledBlinkFlag[0];
+//    flag = ledBlinkFlag[0];
+//    break;
 //  case Board_LED1:
 //    ledBlinkFlag[1] = !ledBlinkFlag[1];
 //    flag = ledBlinkFlag[1];
