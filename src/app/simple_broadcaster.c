@@ -635,7 +635,7 @@ static void SimpleBLEBroadcaster_taskFxn(UArg a0, UArg a1)
         }
         advValue = HwADCRead();
         volValue = (advValue * 430) / 4095;
-        if (volValue <= 220)
+        if (volValue <= 275)
             bat_low_flag = 1;
         else
             bat_low_flag = 0;
