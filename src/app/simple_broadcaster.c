@@ -91,7 +91,7 @@
  */
 
 // What is the advertising interval when device is discoverable (units of 625us, 160=100ms)
-#define DEFAULT_ADVERTISING_INTERVAL          (230) //160
+#define DEFAULT_ADVERTISING_INTERVAL          (448) //160
 #define BEACON_FEATURE
 
 // Type of Display to open
