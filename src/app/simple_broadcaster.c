@@ -112,7 +112,7 @@
 #define RADIO_TASK_PRIORITY                   1
 
 #ifndef SBB_TASK_STACK_SIZE
-#define SBB_TASK_STACK_SIZE                   800 //660
+#define SBB_TASK_STACK_SIZE                   1000 //660
 #endif
 #ifndef RADIO_TASK_STACK_SIZE
 #define RADIO_TASK_STACK_SIZE                 644
@@ -133,7 +133,7 @@
                                                SBB_LOOP_EVT)
 
 // How often to perform periodic event (in msec)
-#define SBB_PERIODIC_EVT_PERIOD               5000
+#define SBB_PERIODIC_EVT_PERIOD               3000  // 5000
 #define KEY_EVENT_TIMEOUT                     60000
 #define BAT_EVENT_TIMEOUT                     60000
 
@@ -315,18 +315,43 @@ static gapRolesCBs_t simpleBLEBroadcaster_BroadcasterCBs =
   SimpleBLEBroadcaster_stateChangeCB   // Profile State Change Callbacks
 };
 
-static void watchdog_callback(UArg a0)
+//static void watchdog_callback(UArg a0)
+//{
+//  Watchdog_clear(hWDT);
+//}
+//
+//static void watchdog_init(void)
+//{
+//  int t;
+//  
+//  Watchdog_Params wp;
+//  Watchdog_Params_init(&wp);
+//  wp.callbackFxn    = watchdog_callback;
+//  wp.debugStallMode = Watchdog_DEBUG_STALL_ON;
+//  wp.resetMode      = Watchdog_RESET_ON;
+//
+//  Watchdog_init();
+//  hWDT = Watchdog_open(CC2640R2_LAUNCHXL_WATCHDOG0, &wp);
+//  if (hWDT == NULL) 
+//  {
+//    /* Error opening Watchdog */
+//    while (1);
+//  }
+//  t = Watchdog_convertMsToTicks(hWDT, 1000);
+//  Watchdog_setReload(hWDT, t); // 1sec (WDT runs always at 48MHz/32)
+//}
+static void wdt_feed(void)
 {
   Watchdog_clear(hWDT);
 }
 
-static void watchdog_init(void)
+static void wdt_init(void)
 {
   int t;
   
   Watchdog_Params wp;
   Watchdog_Params_init(&wp);
-  wp.callbackFxn    = watchdog_callback;
+//  wp.callbackFxn    = watchdog_callback;
   wp.debugStallMode = Watchdog_DEBUG_STALL_ON;
   wp.resetMode      = Watchdog_RESET_ON;
 
@@ -335,9 +360,9 @@ static void watchdog_init(void)
   if (hWDT == NULL) 
   {
     /* Error opening Watchdog */
-    while (1);
+    return;
   }
-  t = Watchdog_convertMsToTicks(hWDT, 1000);
+  t = Watchdog_convertMsToTicks(hWDT, SBB_PERIODIC_EVT_PERIOD + 1000);
   Watchdog_setReload(hWDT, t); // 1sec (WDT runs always at 48MHz/32)
 }
 
@@ -533,14 +558,17 @@ static void SimpleBLEBroadcaster_init(void)
   Display_print0(dispHandle, 0, 0, "BLE Broadcaster");
   
   HwGPIOInit();
-//  HwGPIOSet(Board_RLED,1);
+
+  HwGPIOSet(IOID_12, 1);
+  Task_sleep(500 * (1000 / Clock_tickPeriod));
+  HwGPIOSet(IOID_12, 0);
 
 //  HwUARTInit();
 //  HwUARTWrite("observer init\r\n",13);
 //  SpiInit();
   
 //  radio_createTask();
-  watchdog_init();
+  wdt_init();
 }
 
 /*********************************************************************
@@ -611,6 +639,7 @@ static void SimpleBLEBroadcaster_taskFxn(UArg a0, UArg a1)
       }
       if (events & SBB_LOOP_EVT)
       {
+        //wdt_feed();
         if (key_alarm_flag)
         {
             key_alarm_flag = 0;
@@ -635,7 +664,7 @@ static void SimpleBLEBroadcaster_taskFxn(UArg a0, UArg a1)
         }
         advValue = HwADCRead();
         volValue = (advValue * 430) / 4095;
-        if (volValue <= 275)
+        if (volValue <= 245)
             bat_low_flag = 1;
         else
             bat_low_flag = 0;
@@ -858,12 +887,14 @@ static void radio_taskFxn(UArg a0, UArg a1)
 //    station_init();
 //    uint16_t advValue = 0;
 //    HwADCInit();
-    
-    while(1)
-    {
+    HwGPIOSet(IOID_12, 1);
+    Task_sleep(500 * (1000 / Clock_tickPeriod));
+    HwGPIOSet(IOID_12, 0);
+//    while(1)
+//    {
 //        ret = station_recv_data(&pbuf, &rcvlen);
-        Task_sleep(5000 * (1000 / Clock_tickPeriod));
-    }
+//        Task_sleep(5000 * (1000 / Clock_tickPeriod));
+//    }
 }
 
 /*********************************************************************
